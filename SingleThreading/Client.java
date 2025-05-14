@@ -1,4 +1,4 @@
-package SingleThreading;
+package SingleThreading;              // comment when running on terminal
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +17,10 @@ public class Client {
 
         Socket socket =new Socket(address , port);
 
-        PrintWriter toSocket = new PrintWriter(socket.getOutputStream());
+        PrintWriter toSocket = new PrintWriter(socket.getOutputStream(),true);
         BufferedReader fromSocket= new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-        toSocket.println("Hello from the client");
+        toSocket.println("Hello from the client\n");
         String line= fromSocket.readLine();
         System.out.println("Response from the socket is : "+line);
         toSocket.close();

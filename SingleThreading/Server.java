@@ -1,4 +1,4 @@
-package SingleThreading;
+package SingleThreading;  // comment when running on terminal
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,12 +19,19 @@ public class Server {
                 System.out.println("Server is listening on port "+ port);
                 Socket acceptedConnection =socket.accept();
                 System.out.println("Connection accepted from client" + acceptedConnection.getRemoteSocketAddress());
-                PrintWriter toClient =new PrintWriter(acceptedConnection.getOutputStream());
-                BufferedReader fromClient =new BufferedReader(new InputStreamReader(acceptedConnection.getInputStream()));
+
+                PrintWriter toClient =new PrintWriter(acceptedConnection.getOutputStream(),true);
                 toClient.println("Hello from the server");
+
+                BufferedReader fromClient =new BufferedReader(new InputStreamReader(acceptedConnection.getInputStream()));
+                String clientMessage;
+                while ((clientMessage = fromClient.readLine()) != null) {
+                    System.out.println("Received from client: " + clientMessage);
+                }
                 toClient.close();
                 fromClient.close();
                 acceptedConnection.close();
+
             }catch(Exception ex){
                 ex.printStackTrace();
             }
