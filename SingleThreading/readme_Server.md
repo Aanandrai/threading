@@ -469,4 +469,68 @@ Client -----> Socket -----> getInputStream() -----> InputStreamReader -----> Buf
 
 -----------------
 
+### Q5. What is **Auto-Flushing**?
+
+**Auto-flushing** means that data written to a stream (like a socket or file) is **automatically sent** or **written out** after certain operations—like calling `println()`.
+
+When auto-flushing is **enabled**, you **don’t have to manually call `flush()`** each time you want data to be sent out of the buffer.
+
+
+#### 🧠 Why Flushing Is Important
+
+When you use a `PrintWriter`, it buffers output (stores it in memory temporarily) to improve performance. This means:
+
+* You might call `println()`, but **no data is actually sent** until:
+
+  * You call `flush()` manually, or
+  * The buffer fills up, or
+  * You close the stream
+
+This is a problem with **network sockets**, because the client or server may be **waiting for a response** that hasn't actually been sent yet (even though it looks like your code already sent it).
+
+
+### 🛠️ Example: Without Auto-Flushing
+
+```java
+PrintWriter writer = new PrintWriter(socket.getOutputStream());
+// This sends nothing yet!
+writer.println("Hello"); 
+// Still nothing happens unless:
+writer.flush(); // ← Now it’s actually sent
+```
+### ✅ With Auto-Flushing
+
+```java
+PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+writer.println("Hello"); // ← Immediately sent to the other side!
+```
+
+The `true` enables auto-flush on calls to `println()`, `printf()`, or `format()`.
+
+---
+
+#### 🚦 What Problem Does Auto-Flushing Solve?
+
+It prevents **"hanging" or freezing behavior** in network communication where:
+
+* One side is waiting for data that the other side *thinks* it already sent—but it’s still sitting in a buffer.
+
+In your case:
+
+* The **server** wrote to the client, but didn’t flush.
+* The **client** waited for a response (`readLine()`), but nothing arrived.
+* So the program just sat there — frozen.
+
+
+#### 📌 Summary
+
+| Feature               | With Auto-Flush (`true`) | Without Auto-Flush (default) |
+| --------------------- | ------------------------ | ---------------------------- |
+| Data Sent Immediately | ✅ Yes                    | ❌ No (must call `flush()`)   |
+| Prevents Hanging      | ✅ Yes                    | ❌ No                         |
+| Good for Sockets      | ✅ Recommended            | ❌ Risk of bugs               |
+
+--------------------------
+
+
 
