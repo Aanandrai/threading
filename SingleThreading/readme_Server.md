@@ -368,7 +368,7 @@ This sends `"Welcome to the server!"` to the client, and the client can read it 
 -------------
 
 
-### Q4. `acceptedConnection.getOutputStream()` what it does?
+### Q4. `acceptedConnection.getInputStream()` what it does?
 Ans. that line is very important in **receiving data from the client** over a TCP connection.
 
 
